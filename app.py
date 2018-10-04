@@ -6,7 +6,7 @@ def algorithm(n: int) -> int:
 
 Address = Tuple[str, int]
 
-def handler(client: socket.socket) -> None:
+async def handler(client: socket.socket) -> None:
     while True:
         request: bytes = client.recv(100)
         if not request.strip():
@@ -16,7 +16,7 @@ def handler(client: socket.socket) -> None:
         result = algorithm(number)
         client.send(f'{result}\n'.encode('ascii'))   
 
-def server(address: Address) -> None:
+async def server(address: Address) -> None:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(address)
@@ -24,6 +24,9 @@ def server(address: Address) -> None:
     while True:
         client, addr = sock.accept()
         print(f'Connection from{addr}')
-        handler(client)
+        add_task(handler(client))
 
-server(('localhost', 30303))
+def add_task(task: Task) -> None:
+    pass
+
+add_task(server(('localhost', 30303)))
