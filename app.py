@@ -32,4 +32,8 @@ TASKS: Deque[Task] = deque()
 def add_task(task: Task) -> None:
     TASKS.append(task)
 
+def run() -> None:
+    pass
+
 add_task(server(('localhost', 30303)))
+run()
