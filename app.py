@@ -26,7 +26,10 @@ async def server(address: Address) -> None:
         print(f'Connection from{addr}')
         add_task(handler(client))
 
+Task = TypeVar('Task')
+TASKS: Deque[Task] = deque()
+
 def add_task(task: Task) -> None:
-    pass
+    TASKS.append(task)
 
 add_task(server(('localhost', 30303)))
