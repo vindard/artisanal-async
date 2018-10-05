@@ -77,14 +77,14 @@ def run() -> None:
         current_task = TASKS.popleft()
         try:
             action, target = current_task.send(None)
-            except StopIteration:
+        except StopIteration:
                 continue
-            if action is Action.Read:
-                WAIT_READ[target] = current_task
-            elif action is Action.Send:
-                WAIT_SEND[target] = current_task
-            else:
-                raise ValueError(f'Unknown action {action}')
+        if action is Action.Read:
+            WAIT_READ[target] = current_task
+        elif action is Action.Send:
+            WAIT_SEND[target] = current_task
+        else:
+            raise ValueError(f'Unknown action {action}')
 
 add_task(server(('localhost', 30303)))
 run()
