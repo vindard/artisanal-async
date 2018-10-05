@@ -8,13 +8,13 @@ Address = Tuple[str, int]
 
 async def handler(client: socket.socket) -> None:
     while True:
-        request: bytes = client.recv(100)
+        request: bytes = await async_recv(client, 100)
         if not request.strip():
             client.close()
             return
         number = int(request)
         result = algorithm(number)
-        client.send(f'{result}\n'.encode('ascii'))   
+        await async_send(client, f'{result}\n'.encode('ascii'))
 
 async def server(address: Address) -> None:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,7 +22,7 @@ async def server(address: Address) -> None:
     sock.bind(address)
     sock.listen(5)
     while True:
-        client, addr = sock.accept()
+        client, addr = async_accept(sock)
         print(f'Connection from{addr}')
         add_task(handler(client))
 
