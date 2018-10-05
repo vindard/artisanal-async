@@ -1,5 +1,6 @@
 from typing import *
 import socket
+from collections import deque
 from enum import Enum, auto
 
 def algorithm(n: int) -> int:
