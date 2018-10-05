@@ -62,8 +62,22 @@ async def async_send(sock: socket.socket, data: bytes) -> int:
 def add_task(task: Task) -> None:
     TASKS.append(task)
 
+WAIT_READ: Dict[socket.socket, Task] = {}
+WAIT_SEND: Dict[socket.socket, Task] = {}
+
 def run() -> None:
-    pass
+    while TASKS:
+        current_task = TASKS.popleft()
+        try:
+            action, target = current_task.send(None)
+            except StopIteration:
+                continue
+            if action is Action.Read:
+                WAIT_READ[target] = current_task
+            elif action is Action.Send:
+                WAIT_SEND[target] = current_task
+            else:
+                raise ValueError(f'Unknown action {action}')
 
 add_task(server(('localhost', 30303)))
 run()
