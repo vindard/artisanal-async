@@ -25,7 +25,7 @@ async def server(address: Address) -> None:
     sock.bind(address)
     sock.listen(5)
     while True:
-        client, addr = async_accept(sock)
+        client, addr = await async_accept(sock)
         print(f'Connection from{addr}')
         add_task(handler(client))
 
