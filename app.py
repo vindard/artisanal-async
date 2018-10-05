@@ -2,6 +2,7 @@ from typing import *
 import socket
 from collections import deque
 from enum import Enum, auto
+import select
 
 def algorithm(n: int) -> int:
     return n + 42
@@ -66,7 +67,13 @@ WAIT_READ: Dict[socket.socket, Task] = {}
 WAIT_SEND: Dict[socket.socket, Task] = {}
 
 def run() -> None:
-    while TASKS:
+    while any([TASKS, WAIT_SEND, WAIT_READ]):
+        while not TASKS:
+            can_read, can_send, _ = select.select(WAIT_READ, WAIT_SEND, [])
+            for sock in can_read:
+                add_task(WAIT_READ.pop(sock))
+            for sock in can_send:
+                add_task(WAIT_SEND.pop(sock))
         current_task = TASKS.popleft()
         try:
             action, target = current_task.send(None)
