@@ -29,17 +29,26 @@ async def server(address: Address) -> None:
 Task = TypeVar('Task')
 TASKS: Deque[Task] = deque()
 
+class Can:
+    def __init__(self, action: Action, target: socket.socket):
+        self.action = action
+        self.target = target
+
+    def __await__(self):
+        yield self.action, self.target
+
+
 async def async_accept(sock: socket.socket) -> Tuple[socket.socket,
   Address]:
-    # TODO
+    await Can(Action.Read, sock)
     return sock.accept()
 
 async def async_recv(sock: socket.socket, num: int) -> bytes:
-    # TODO
+    await Can(Action.Read, sock)
     return sock.recv(num)
 
 async def async_send(sock: socket.socket, data: bytes) -> int:
-    # TODO
+    await Can(Action.Send, sock)
     return sock.send(data)
 
 
