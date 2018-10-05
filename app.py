@@ -29,6 +29,20 @@ async def server(address: Address) -> None:
 Task = TypeVar('Task')
 TASKS: Deque[Task] = deque()
 
+async def async_accept(sock: socket.socket) -> Tuple[socket.socket,
+  Address]:
+    # TODO
+    return sock.accept()
+
+async def async_recv(sock: socket.socket, num: int) -> bytes:
+    # TODO
+    return sock.recv(num)
+
+async def async_send(sock: socket.socket, data: bytes) -> int:
+    # TODO
+    return sock.send(data)
+
+
 def add_task(task: Task) -> None:
     TASKS.append(task)
 
