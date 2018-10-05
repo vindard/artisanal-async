@@ -1,5 +1,6 @@
 from typing import *
 import socket
+from enum import Enum, auto
 
 def algorithm(n: int) -> int:
     return n + 42
@@ -28,6 +29,11 @@ async def server(address: Address) -> None:
 
 Task = TypeVar('Task')
 TASKS: Deque[Task] = deque()
+
+
+class Action(Enum):
+    Read = auto()
+    Send = auto()
 
 class Can:
     def __init__(self, action: Action, target: socket.socket):
